@@ -5,7 +5,7 @@
 
 ## 📖 Tentang Proyek Ini
 
-**Morfiqo** adalah sistem *backend* *e-commerce* modern yang dibangun sebagai proyek portofolio. Proyek ini memecahkan salah satu masalah utama dalam ritel *fashion online*: **tingkat pengembalian barang (retur) yang tinggi akibat ukuran yang tidak pas**. 
+**Morfiqo** adalah sistem *backend* *e-commerce* modern. Proyek ini memecahkan salah satu masalah utama dalam ritel *fashion online*: **tingkat pengembalian barang (retur) yang tinggi akibat ukuran yang tidak pas**. 
 
 Daripada mengandalkan aset uji coba (*virtual try-on*) 3D yang mahal dan rumit—yang mana sebagian besar UMKM/toko menengah ke bawah tidak mampu membuatnya—Morfiqo menggunakan **Algoritma Smart Sizing**. Pelanggan cukup memasukkan ukuran tubuh mereka, toko memasukkan *size chart* standar mereka dalam sentimeter, dan sistem *backend* akan mengkalkulasi kecocokan terbaik secara otomatis.
 
