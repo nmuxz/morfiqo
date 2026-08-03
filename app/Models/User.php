@@ -36,4 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(CustomerBodyProfile::class);
     }
+
+    public function store()
+    {
+        return $this->hasOne(Store::class);
+    }
 }

@@ -10,5 +10,12 @@ Route::get('/user', function (Request $request) {
 // Auth Routes
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
+// Seller Routes
+Route::middleware(['auth:sanctum', 'role:store_owner|super_admin'])->prefix('seller')->group(function () {
+    Route::apiResource('products', \App\Http\Controllers\Api\Seller\StoreProductController::class);
+    Route::post('products/{product}/sizes', [\App\Http\Controllers\Api\Seller\ProductSizeController::class, 'store']);
+    Route::delete('products/{product}/sizes/{size}', [\App\Http\Controllers\Api\Seller\ProductSizeController::class, 'destroy']);
+});
+
 // Morfiqo Smart Sizing API Routes
 Route::get('/products/{product_id}/recommend-size', [\App\Http\Controllers\Api\SizeRecommendationController::class, 'recommendSize']);
