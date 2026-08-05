@@ -11,11 +11,17 @@
             <p class="text-gray-500 mt-1">Kelola produk dan tabel ukuran (size chart) untuk toko <span class="font-semibold text-indigo-600">{{ $store->name }}</span>.</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <button class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg shadow-sm hover:bg-indigo-700 transition-colors font-medium flex items-center cursor-not-allowed opacity-70" title="Fitur penambahan produk via UI sedang dalam pengembangan">
+            <a href="{{ route('seller.products.create') }}" class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg shadow-sm hover:bg-indigo-700 transition-colors font-medium flex items-center">
                 <i class="fas fa-plus mr-2"></i> Tambah Produk
-            </button>
+            </a>
         </div>
     </div>
+
+    @if (session('success'))
+        <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-md">
+            <p class="text-sm text-green-700">{{ session('success') }}</p>
+        </div>
+    @endif
 
     <!-- Product List -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -55,7 +61,7 @@
                         <td class="px-6 py-4">
                             <div class="flex flex-wrap gap-1">
                                 @forelse($product->sizes as $size)
-                                    <span class="inline-block bg-gray-100 border border-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-sm" title="LD: {{ $size->chest_width_cm }}cm">
+                                    <span class="inline-block bg-gray-100 border border-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-sm" title="LD: {{ $size->chest_width_cm }}cm, Stok: {{ $size->stock }}">
                                         {{ $size->size_label }}
                                     </span>
                                 @empty
@@ -63,16 +69,20 @@
                                 @endforelse
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="/products/{{ $product->id }}" class="text-indigo-600 hover:text-indigo-900 mr-3" title="Lihat di Halaman Pembeli">
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end items-center space-x-3">
+                            <a href="/products/{{ $product->id }}" class="text-indigo-600 hover:text-indigo-900" title="Lihat di Halaman Pembeli">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="#" class="text-gray-400 hover:text-indigo-600 mr-3 cursor-not-allowed">
+                            <a href="{{ route('seller.products.edit', $product->id) }}" class="text-gray-400 hover:text-indigo-600">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="#" class="text-gray-400 hover:text-red-600 cursor-not-allowed">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                            <form action="{{ route('seller.products.destroy', $product->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-gray-400 hover:text-red-600" onclick="return confirm('Anda yakin ingin menghapus produk ini beserta seluruh ukurannya?');">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     @empty

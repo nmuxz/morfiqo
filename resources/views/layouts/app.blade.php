@@ -42,8 +42,12 @@
                     <a href="/" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Katalog</a>
                     
                     @auth
-                        @if(auth()->user()->hasRole('store_owner') || auth()->user()->hasRole('super_admin'))
-                            <a href="/seller/dashboard" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Dashboard Penjual</a>
+                        @if(Auth::user()->hasRole('store_owner') || Auth::user()->hasRole('super_admin'))
+                            <a href="{{ route('seller.orders.index') }}" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Pesanan Masuk</a>
+                            <a href="{{ route('seller.dashboard') }}" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Toko Saya</a>
+                        @else
+                            <a href="{{ route('orders.index') }}" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Pesanan Saya</a>
+                            <a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors"><i class="fas fa-shopping-cart"></i> Keranjang</a>
                         @endif
                         
                         <!-- Profile Dropdown -->
