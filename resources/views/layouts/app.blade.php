@@ -72,7 +72,7 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Masuk</a>
-                        <a href="{{ route('login') }}" class="bg-gray-900 text-white px-5 py-2 rounded-full font-medium hover:bg-gray-800 shadow-md transition-transform transform hover:-translate-y-0.5">Daftar</a>
+                        <a href="{{ route('register') }}" class="bg-gray-900 text-white px-5 py-2 rounded-full font-medium hover:bg-gray-800 shadow-md transition-transform transform hover:-translate-y-0.5">Daftar</a>
                     @endauth
                 </div>
 

@@ -9,6 +9,8 @@ Route::get('/user', function (Request $request) {
 
 // Auth Routes
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+Route::post('/register/customer', [\App\Http\Controllers\Api\AuthController::class, 'registerCustomer']);
+Route::post('/register/seller', [\App\Http\Controllers\Api\AuthController::class, 'registerSeller']);
 
 // Seller Routes
 Route::middleware(['auth:sanctum', 'role:store_owner|super_admin'])->prefix('seller')->group(function () {

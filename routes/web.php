@@ -9,6 +9,9 @@ Route::get('/products/{product}', [\App\Http\Controllers\Web\ProductController::
 Route::get('/login', [\App\Http\Controllers\Web\AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\Web\AuthController::class, 'login']);
 Route::post('/logout', [\App\Http\Controllers\Web\AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [\App\Http\Controllers\Web\AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register/customer', [\App\Http\Controllers\Web\AuthController::class, 'registerCustomer'])->name('register.customer');
+Route::post('/register/seller', [\App\Http\Controllers\Web\AuthController::class, 'registerSeller'])->name('register.seller');
 
 // Seller Web Routes
 Route::middleware(['auth', 'role:store_owner|super_admin'])->prefix('seller')->group(function () {

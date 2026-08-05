@@ -66,8 +66,9 @@
                 </div>
             </form>
             
-            <div class="mt-6 text-center">
-                <a href="/" class="text-sm text-indigo-600 hover:text-indigo-500 hover:underline transition-all">Kembali ke Beranda</a>
+            <div class="mt-6 text-center space-y-2">
+                <p class="text-sm text-gray-600">Belum punya akun? <a href="{{ route('register') }}" class="text-indigo-600 hover:text-indigo-500 font-medium hover:underline transition-all">Daftar sekarang</a></p>
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-700 hover:underline transition-all inline-block mt-2"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a>
             </div>
         </div>
     </div>
