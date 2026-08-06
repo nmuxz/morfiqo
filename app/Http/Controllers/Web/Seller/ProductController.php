@@ -25,7 +25,9 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:top,bottom',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $user = Auth::user();
@@ -35,10 +37,17 @@ class ProductController extends Controller
             abort(403, 'Anda belum memiliki toko.');
         }
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+
         $store->products()->create([
             'name' => $request->name,
             'type' => $request->type,
             'description' => $request->description,
+            'price' => $request->price,
+            'image_path' => $imagePath,
         ]);
 
         return redirect()->route('seller.dashboard')->with('success', 'Produk berhasil ditambahkan.');
@@ -60,25 +69,36 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:top,bottom',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $user = Auth::user();
-        $store = $user->store;
-
+        $store = Auth::user()->store;
         $product = Product::where('store_id', $store->id)->findOrFail($id);
-        $product->update([
+        
+        $data = [
             'name' => $request->name,
             'type' => $request->type,
             'description' => $request->description,
-        ]);
+            'price' => $request->price,
+        ];
 
-        return redirect()->route('seller.dashboard')->with('success', 'Produk berhasil diubah.');
+        if ($request->hasFile('image')) {
+            if ($product->image_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image_path);
+            }
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($data);
+
+        return redirect()->route('seller.dashboard')->with('success', 'Produk berhasil diperbarui.');
     }
 
     /**

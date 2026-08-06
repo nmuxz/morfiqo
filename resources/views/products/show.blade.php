@@ -25,8 +25,12 @@
             
             <!-- Product Image Section -->
             <div class="relative bg-gray-50 p-8 flex items-center justify-center">
-                @php $imgId = 100 + $product->id; @endphp
-                <img src="https://picsum.photos/id/{{ $imgId }}/600/800" alt="{{ $product->name }}" class="rounded-2xl shadow-lg object-cover w-full h-[600px]">
+                @if($product->image_path)
+                    <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="rounded-2xl shadow-lg object-cover w-full h-[600px]">
+                @else
+                    @php $imgId = 100 + $product->id; @endphp
+                    <img src="https://picsum.photos/id/{{ $imgId }}/600/800" alt="{{ $product->name }}" class="rounded-2xl shadow-lg object-cover w-full h-[600px]">
+                @endif
                 
                 <div class="absolute top-12 left-12">
                     <span class="bg-indigo-600 text-white text-sm font-bold px-4 py-2 rounded-full uppercase tracking-widest shadow-md">
@@ -162,6 +166,58 @@
                         @endauth
 
                     </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="mt-12 pt-8 border-t border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Ulasan Pembeli</h3>
+                    
+                    @if($product->reviews->count() > 0)
+                        <div class="flex items-center mb-8">
+                            <div class="text-4xl font-black text-gray-900 mr-4">
+                                {{ number_format($product->reviews->avg('rating'), 1) }}
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="text-yellow-400 text-lg">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star {{ $i <= round($product->reviews->avg('rating')) ? '' : 'text-gray-300' }}"></i>
+                                    @endfor
+                                </div>
+                                <span class="text-sm text-gray-500 mt-1">Berdasarkan {{ $product->reviews->count() }} ulasan</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            @foreach($product->reviews as $review)
+                                <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                                                {{ strtoupper(substr($review->user->name, 0, 1)) }}
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-gray-900">{{ $review->user->name }}</p>
+                                                <p class="text-xs text-gray-500">{{ $review->created_at->format('d M Y') }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-yellow-400 text-sm">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="fas fa-star {{ $i <= $review->rating ? '' : 'text-gray-300' }}"></i>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    @if($review->comment)
+                                        <p class="text-gray-700">{{ $review->comment }}</p>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-8 bg-gray-50 rounded-2xl border border-gray-100">
+                            <i class="fas fa-comment-slash text-4xl text-gray-300 mb-3"></i>
+                            <p class="text-gray-500">Belum ada ulasan untuk produk ini.</p>
+                        </div>
+                    @endif
                 </div>
 
             </div>

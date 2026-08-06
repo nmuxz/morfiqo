@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout', [\App\Http\Controllers\Web\CheckoutController::class, 'process'])->name('checkout.process');
 
     Route::get('/orders', [\App\Http\Controllers\Web\OrderController::class, 'index'])->name('orders.index');
+    
+    Route::post('/reviews/{orderItem}', [\App\Http\Controllers\Web\ReviewController::class, 'store'])->name('reviews.store');
+    
+    Route::get('/profile', [\App\Http\Controllers\Web\Customer\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [\App\Http\Controllers\Web\Customer\ProfileController::class, 'update'])->name('profile.update');
 });
 
 // Seller Web Routes

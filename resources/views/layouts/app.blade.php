@@ -55,21 +55,18 @@
                         @endif
                         
                         <!-- Profile Dropdown -->
-                        <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" @click.away="open = false" class="flex items-center space-x-2 focus:outline-none">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                                    {{ substr(auth()->user()->name, 0, 1) }}
+                        <div x-data="{ open: false }" class="relative ml-4">
+                            <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                 </div>
-                                <span class="font-medium text-sm text-gray-700">{{ auth()->user()->name }}</span>
+                                <span class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</span>
                                 <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                             </button>
-
-                            <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 border border-gray-100 ring-1 ring-black ring-opacity-5">
-                                <div class="px-4 py-2 border-b border-gray-100">
-                                    <p class="text-xs text-gray-500">Masuk sebagai</p>
-                                    <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->email }}</p>
-                                </div>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">Profil Anda</a>
+                            
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 border border-gray-100 z-50" style="display: none;">
+                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600">Profil Saya</a>
+                                <hr class="my-1 border-gray-100">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">

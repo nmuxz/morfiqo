@@ -32,14 +32,13 @@
             @forelse ($products as $product)
                 <a href="/products/{{ $product->id }}" class="group block">
                     <div class="relative bg-white rounded-2xl p-4 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                        <!-- Image Placeholder -->
-                        <div class="aspect-w-3 aspect-h-4 bg-gray-100 rounded-xl overflow-hidden mb-4 relative">
-                            @php
-                                // Random placeholder image based on ID
-                                $imgId = 100 + $product->id;
-                            @endphp
-                            <img src="https://picsum.photos/id/{{ $imgId }}/400/500" alt="{{ $product->name }}" class="w-full h-full object-center object-cover group-hover:scale-105 transition-transform duration-500">
-                            
+                        <!-- Image -->
+                        <div class="aspect-w-3 aspect-h-4 bg-gray-100 rounded-xl overflow-hidden mb-4 relative flex items-center justify-center">
+                            @if($product->image_path)
+                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-center object-cover group-hover:scale-105 transition-transform duration-500">
+                            @else
+                                <i class="fas fa-tshirt text-6xl text-gray-300"></i>
+                            @endif
                             <div class="absolute top-3 left-3">
                                 <span class="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-2 py-1 rounded-lg uppercase tracking-wider shadow-sm">
                                     {{ $product->type }}
@@ -50,7 +49,7 @@
                         <div>
                             <p class="text-sm text-indigo-600 font-semibold mb-1">{{ $product->store->name ?? 'Toko Tidak Diketahui' }}</p>
                             <h3 class="text-lg font-bold text-gray-900 mb-1 truncate">{{ $product->name }}</h3>
-                            <p class="text-gray-500 text-sm line-clamp-2">{{ $product->description }}</p>
+                            <p class="text-gray-900 font-bold">Rp {{ number_format($product->price ?? 0, 0, ',', '.') }}</p>
                         </div>
                     </div>
                 </a>
