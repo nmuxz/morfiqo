@@ -42,6 +42,10 @@
                     <a href="/" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Katalog</a>
                     
                     @auth
+                        @if(Auth::user()->hasRole('super_admin'))
+                            <a href="{{ route('admin.dashboard') }}" class="text-red-600 hover:text-red-800 font-bold transition-colors">Admin Panel</a>
+                        @endif
+                        
                         @if(Auth::user()->hasRole('store_owner') || Auth::user()->hasRole('super_admin'))
                             <a href="{{ route('seller.orders.index') }}" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Pesanan Masuk</a>
                             <a href="{{ route('seller.dashboard') }}" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Toko Saya</a>

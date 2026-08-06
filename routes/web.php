@@ -43,3 +43,12 @@ Route::middleware(['auth', 'role:store_owner|super_admin'])->prefix('seller')->g
     Route::get('/orders', [\App\Http\Controllers\Web\Seller\OrderController::class, 'index'])->name('seller.orders.index');
     Route::put('/orders/{order}', [\App\Http\Controllers\Web\Seller\OrderController::class, 'update'])->name('seller.orders.update');
 });
+
+// Admin Web Routes
+Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Web\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/users', [\App\Http\Controllers\Web\Admin\UserController::class, 'index'])->name('users.index');
+    Route::get('/stores', [\App\Http\Controllers\Web\Admin\StoreController::class, 'index'])->name('stores.index');
+    Route::get('/orders', [\App\Http\Controllers\Web\Admin\OrderController::class, 'index'])->name('orders.index');
+});
+
