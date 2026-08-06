@@ -1,28 +1,30 @@
 <div align="center">
-  <h1>Morfiqo - Smart Sizing E-Commerce API</h1>
-  <p>Headless E-Commerce Backend dengan Mesin Rekomendasi Ukuran Berbasis Data (Data-Driven).</p>
+  <h1>Morfiqo - Full-Stack Smart Sizing E-Commerce</h1>
+  <p>Platform E-Commerce Inovatif dengan Mesin Rekomendasi Ukuran Cerdas Berbasis Data (Data-Driven).</p>
 </div>
 
 ## 📖 Tentang Proyek Ini
 
-**Morfiqo** adalah sistem *backend* *e-commerce* modern. Proyek ini memecahkan salah satu masalah utama dalam ritel *fashion online*: **tingkat pengembalian barang (retur) yang tinggi akibat ukuran yang tidak pas**. 
+**Morfiqo** adalah platform *e-commerce full-stack* modern yang dibangun untuk memecahkan salah satu masalah terbesar dalam ritel *fashion online*: **tingkat pengembalian barang (retur) yang tinggi akibat ukuran pakaian yang tidak pas**. 
 
-Daripada mengandalkan aset uji coba (*virtual try-on*) 3D yang mahal dan rumit—yang mana sebagian besar UMKM/toko menengah ke bawah tidak mampu membuatnya—Morfiqo menggunakan **Algoritma Smart Sizing**. Pelanggan cukup memasukkan ukuran tubuh mereka, toko memasukkan *size chart* standar mereka dalam sentimeter, dan sistem *backend* akan mengkalkulasi kecocokan terbaik secara otomatis.
+Daripada mengandalkan fitur coba virtual (*virtual try-on*) 3D yang mahal dan rumit untuk UMKM, Morfiqo menggunakan **Algoritma Smart Sizing**. Pelanggan dapat memasukkan dan memperbarui profil tubuh mereka (tinggi, berat, lingkar dada), sementara pemilik toko memasukkan *size chart* dalam sentimeter. Sistem kami kemudian akan menghitung kecocokan terbaik dan memberikan rekomendasi ukuran secara presisi.
 
 ### 🚀 Fitur Unggulan
 
-*   **Smart Size Recommendation Engine**: Endpoint algoritmik yang mencocokkan profil tubuh pelanggan (tinggi, berat, lingkar dada) dengan dimensi produk secara akurat.
-*   **Role-Based Access Control (RBAC)**: Otentikasi multi-peran yang aman (Super Admin, Pemilik Toko, Pelanggan) menggunakan modul Spatie.
-*   **Headless API Architecture**: 100% JSON RESTful API, siap dikonsumsi oleh aplikasi Frontend apa pun (React, Vue, atau aplikasi Mobile).
-*   **API Authentication**: Keamanan berbasis token menggunakan Laravel Sanctum.
-*   **Auto-Generated API Docs**: Terintegrasi penuh dengan Dedoc Scramble untuk menghasilkan dokumentasi API otomatis (Swagger/OpenAPI).
+*   **Smart Size AI Engine**: Sistem cerdas yang mengkalkulasi selisih dimensi pakaian dengan profil pelanggan untuk mencari kecocokan sempurna (Slim Fit, Regular, atau Oversize).
+*   **Role-Based Access Control (RBAC)**: Tiga tingkat peran pengguna yang dikelola secara ketat:
+    *   **Super Admin**: Memiliki *Dashboard* khusus untuk memantau metrik keseluruhan (pengguna, toko, dan pergerakan transaksi).
+    *   **Pemilik Toko (Seller)**: Bisa mengelola etalase produk, mengunggah foto baju, menambah variasi ukuran, dan melacak pesanan masuk.
+    *   **Pelanggan (Customer)**: Memiliki manajemen keranjang belanja, proses *checkout*, manajemen profil tubuh, dan riwayat pesanan.
+*   **Manajemen Media**: Mendukung unggahan (*upload*) foto produk dengan tampilan antarmuka yang menarik.
+*   **Sistem Ulasan (Reviews)**: Pelanggan dapat memberikan *rating* Bintang 1-5 setelah pesanan berstatus *Delivered* (Selesai).
 
 ### 🛠️ Teknologi yang Digunakan
 
-*   **Framework**: Laravel 11 (PHP 8.2+)
+*   **Framework**: Laravel 11 (PHP 8.2+) dengan antarmuka Blade
+*   **Styling**: Tailwind CSS (melalui CDN) dan Alpine.js
 *   **Database**: PostgreSQL
-*   **Auth & Roles**: Laravel Sanctum & Spatie Laravel-Permission
-*   **Dokumentasi API**: Dedoc Scramble
+*   **Auth & Roles**: Laravel Breeze/Jetstream & Spatie Laravel-Permission
 
 ---
 
@@ -53,56 +55,42 @@ Ikuti petunjuk di bawah ini untuk menjalankan proyek secara lokal di komputer An
     php artisan key:generate
     ```
     *Pastikan Anda mengubah `DB_CONNECTION=pgsql` dan menyesuaikan nama databasenya.*
-4.  **Jalankan Migrations & Seeders**
-    Langkah ini akan membuat tabel di database, mengatur struktur *Role*, dan memasukkan data bohongan (katalog produk, *size charts*, dan *user* untuk pengujian).
+4.  **Konfigurasi Penyimpanan Media**
+    Hubungkan folder *storage* agar foto produk dapat diakses secara publik:
     ```sh
-    php artisan migrate:fresh --seed --seeder=MorfiqoTestSeeder
+    php artisan storage:link
     ```
-5.  **Jalankan Server Aplikasi**
+5.  **Jalankan Migrations & Seeders**
+    Langkah ini akan membuat tabel di database, mengatur struktur *Role*, dan memasukkan data dasar (akun admin).
+    ```sh
+    php artisan migrate:fresh --seed
+    ```
+6.  **Jalankan Server Aplikasi**
     ```sh
     php artisan serve
     ```
+7.  **Akses Aplikasi**
+    Buka `http://localhost:8000` di *browser* Anda.
 
 ---
 
-## 🔍 Pengujian API (Melalui Postman)
+## 🔍 Kredensial Akses Awal
 
-Database *seeder* secara otomatis telah membuat *user* pengujian berikut. Semua *user* menggunakan `password` sebagai kata sandinya.
+Sistem ini memiliki *database seeder* (`AdminSeeder.php`) yang secara otomatis membuat satu akun **Super Admin** bawaan.
 
-| Peran (Role) | Email |
-| :--- | :--- |
-| **Super Admin** | `admin@morfiqo.com` |
-| **Pemilik Toko** | `owner@morfiqo.com` |
-| **Pelanggan (Budi)**| `budi@example.com` |
+| Peran (Role) | Email | Password |
+| :--- | :--- | :--- |
+| **Super Admin** | `admin@morfiqo.com` | `password` |
 
-### 1. Dapatkan Token Akses (Login)
-Kirim *request* `POST` ke `/api/login` menggunakan kredensial pelanggan untuk mendapatkan `access_token`.
-```json
-// POST http://localhost:8000/api/login
-{
-    "email": "budi@example.com",
-    "password": "password"
-}
-```
+- Untuk **Pemilik Toko** atau **Pembeli**, Anda dapat langsung mendaftar (*Register*) melalui halaman web. Anda akan otomatis diberikan *role* sesuai dengan jalur pendaftaran yang dipilih.
+- Login menggunakan akun `admin@morfiqo.com` akan otomatis mengarahkan Anda ke Pusat Kendali (Admin Panel).
 
-### 2. Tes Rekomendasi Ukuran (Smart Sizing)
-Kirim *request* `GET` ke *endpoint* rekomendasi menggunakan token yang telah Anda dapatkan di langkah 1.
-```http
-GET /api/products/1/recommend-size?profile_id=1
-Authorization: Bearer {token_akses_anda}
-Accept: application/json
-```
+## 📌 Alur Kerja Utama (Workflow)
 
-**Ekspektasi Respons (JSON):**
-```json
-{
-    "recommended_size": "L",
-    "confidence_score": "85%",
-    "fit_details": {
-        "chest": "Pas / Regular",
-        "overall": "Cocok berdasarkan lingkar dada Anda."
-    },
-    "message": "Berdasarkan profil tubuh Anda, L adalah pilihan terbaik.",
-    "product_id": 1
-}
-
+1. **Registrasi Penjual**: Buat akun sebagai penjual dan isi nama toko Anda. Anda akan langsung masuk ke *Seller Dashboard*.
+2. **Manajemen Produk**: Tambahkan produk baru beserta foto baju dan deskripsinya.
+3. **Manajemen Ukuran**: Pada halaman Edit Produk, masukkan *Size Chart* produk Anda.
+4. **Registrasi Pembeli**: Buat akun pembeli dan lengkapi profil ukuran tubuh Anda (tinggi, berat, lingkar).
+5. **Katalog & Smart Sizing**: Jelajahi beranda. Saat mengeklik suatu produk, gunakan fitur **Smart Sizing AI** untuk melihat rekomendasi ukuran baju yang pas untuk tubuh Anda.
+6. **Checkout & Pesanan**: Tambahkan ke keranjang, dan lakukan simulasi pembayaran.
+7. **Penyelesaian Transaksi & Ulasan**: Penjual mengubah status pesanan dari "Menunggu" menjadi "Dikirim" dan "Selesai" (Delivered). Pembeli kemudian dapat memberikan ulasan produk di menu Pesanan.
