@@ -42,20 +42,46 @@ class MorfiqoTestSeeder extends Seeder
             'domain' => 'distrogaul'
         ]);
 
-        // 2. Create a Product
+        // 2. Call CategorySeeder so we have categories
+        $this->call(CategorySeeder::class);
+        $kaosCategory = \App\Models\Category::where('slug', 'kaos')->first();
+        $jaketCategory = \App\Models\Category::where('slug', 'jaket')->first();
+        $celanaCategory = \App\Models\Category::where('slug', 'celana-jeans')->first();
+
+        // 3. Create Products
         $product = Product::create([
             'store_id' => $store->id,
             'name' => 'Kaos Oblong Basic',
             'type' => 'top',
-            'description' => 'Kaos oblong nyaman dipakai.'
+            'category_id' => $kaosCategory->id ?? null,
+            'description' => 'Kaos oblong nyaman dipakai.',
+            'price' => 75000,
         ]);
 
-        // 3. Create Product Sizes (S, M, L, XL)
-        // Lebar dada M = 50cm, Lingkar dada = 100cm
         ProductSize::create(['product_id' => $product->id, 'size_label' => 'S', 'chest_width_cm' => 48, 'body_length_cm' => 68, 'stock' => 10]);
         ProductSize::create(['product_id' => $product->id, 'size_label' => 'M', 'chest_width_cm' => 50, 'body_length_cm' => 70, 'stock' => 10]);
         ProductSize::create(['product_id' => $product->id, 'size_label' => 'L', 'chest_width_cm' => 52, 'body_length_cm' => 72, 'stock' => 10]);
         ProductSize::create(['product_id' => $product->id, 'size_label' => 'XL', 'chest_width_cm' => 54, 'body_length_cm' => 74, 'stock' => 10]);
+
+        $product2 = Product::create([
+            'store_id' => $store->id,
+            'name' => 'Jaket Denim Pria',
+            'type' => 'top',
+            'category_id' => $jaketCategory->id ?? null,
+            'description' => 'Jaket denim tebal gaya vintage.',
+            'price' => 250000,
+        ]);
+        ProductSize::create(['product_id' => $product2->id, 'size_label' => 'L', 'chest_width_cm' => 54, 'body_length_cm' => 74, 'stock' => 5]);
+
+        $product3 = Product::create([
+            'store_id' => $store->id,
+            'name' => 'Celana Jeans Slim Fit',
+            'type' => 'bottom',
+            'category_id' => $celanaCategory->id ?? null,
+            'description' => 'Jeans melar, nyaman dipakai seharian.',
+            'price' => 180000,
+        ]);
+        ProductSize::create(['product_id' => $product3->id, 'size_label' => '32', 'chest_width_cm' => 0, 'body_length_cm' => 100, 'stock' => 15]);
 
         // 4. Create a Customer & Body Profile
         $customer = User::create([

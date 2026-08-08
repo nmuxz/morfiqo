@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Seller;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('seller.products.create');
+        $categories = Category::orderBy('name')->get();
+        return view('seller.products.create', compact('categories'));
     }
 
     /**
@@ -25,6 +27,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:top,bottom',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -45,6 +48,7 @@ class ProductController extends Controller
         $store->products()->create([
             'name' => $request->name,
             'type' => $request->type,
+            'category_id' => $request->category_id,
             'description' => $request->description,
             'price' => $request->price,
             'image_path' => $imagePath,
@@ -62,8 +66,9 @@ class ProductController extends Controller
         $store = $user->store;
 
         $product = Product::where('store_id', $store->id)->with('sizes')->findOrFail($id);
+        $categories = Category::orderBy('name')->get();
 
-        return view('seller.products.edit', compact('product'));
+        return view('seller.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -74,6 +79,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:top,bottom',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -85,6 +91,7 @@ class ProductController extends Controller
         $data = [
             'name' => $request->name,
             'type' => $request->type,
+            'category_id' => $request->category_id,
             'description' => $request->description,
             'price' => $request->price,
         ];
